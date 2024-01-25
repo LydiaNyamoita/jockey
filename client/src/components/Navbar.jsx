@@ -1,14 +1,17 @@
 import { useState, useEffect } from "react";
 import { FaBars, FaTimes } from "react-icons/fa";
 import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const NavBar = () => {
+  const navigate = useNavigate();
   const [nav, setNav] = useState(false);
   const [loggedIn, setLoggedIn] = useState(false);
 
   const handleLogout = () => {
     localStorage.removeItem("token");
     setLoggedIn(false);
+    navigate("/login");
   };
 
   useEffect(() => {
@@ -27,25 +30,17 @@ const NavBar = () => {
     },
     {
       id: 2,
-      link: "about",
+      link: "jockeys",
     },
     {
       id: 3,
-      link: "Play",
-    },
-    {
-      id: 4,
-      link: "Services",
-    },
-    {
-      id: 5,
-      link: "contact",
+      link: "Races",
     },
   ];
   return (
     <div className="flex justify-between items-center w-full h-20 px-4 text-gray-800  ">
       <div>
-        <Link className="text-7xl font-signature ml-2" to="/">
+        <Link className="text-5xl font-signature ml-2" to="/">
           Jockey
         </Link>
       </div>
@@ -64,11 +59,7 @@ const NavBar = () => {
       {!loggedIn ? (
         <div className="hidden lg:flex items-center">
           <p className="md:px-8 cursor-pointer capitalize font-medium text-gray-800 hover:scale-105 duration-200">
-            <Link to="/login">SignIn</Link>
-          </p>
-          <p className="text-white bg-[#00A6AB] hover:bg-[#00DDE5] focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-auto  px-5 py-2.5 text-center mx-4">
-            {" "}
-            Get Started
+            <Link to="/login">Sign In</Link>
           </p>
         </div>
       ) : (
