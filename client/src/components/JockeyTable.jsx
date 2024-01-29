@@ -18,15 +18,15 @@ export default function JockeyTable({
   const columns = [
     {
       name: "Jockey",
-      selector: (row) => row.jockeyName,
+      selector: (row) => row.name,
     },
     {
-      name: "Min Price",
-      selector: (row) => row.minPrice,
+      name: "Min Odds",
+      selector: (row) => row.min_odds,
     },
     {
       name: "Max Price",
-      selector: (row) => row.maxPrice,
+      selector: (row) => row.max_odds,
     },
     {
       name: "Actions",
@@ -42,20 +42,25 @@ export default function JockeyTable({
     },
   ];
   let view;
+  const handleCloseBtn = () => {
+    navigate("/");
+  };
   if (isAddJockey) {
     var close_btn = (
-      <p
-        type="button"
-        hidden={!isAddJockey}
-        className="bg-white-500 hover:bg-white-700 text-black font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-      >
-        Close
-      </p>
+      <div className="pl-4 ">
+        <button
+          onClick={handleCloseBtn}
+          hidden={!isAddJockey}
+          className="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow"
+        >
+          Close
+        </button>
+      </div>
     );
     view = (
       <AddJockey
         handleJockeySubmit={handleJockeySubmit}
-        closeButton={close_btn}
+        handleClose={handleCloseButton}
       ></AddJockey>
     );
   } else {
@@ -78,3 +83,5 @@ export default function JockeyTable({
     </>
   );
 }
+
+// TIME_ZONE = "Australia/Sydney"
