@@ -1,26 +1,40 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import AddJockey from "../components/AddJockey";
 import JockeyTable from "../components/JockeyTable";
+import backend from "../configs/backend";
+import { AuthContext } from "../commons/AuthContext";
 function HomePage() {
   let elem;
   const [jockeys, setJockeys] = useState([]);
   const [isAddJockey, setIsAdd] = useState(false);
   const [error, setError] = useState("");
-  const token = localStorage.getItem("token");
+  // const [selected, setSelected] = useState("3");
+  const { jwt, logout } = useContext(AuthContext);
+
+  var config = {
+    headers: {
+      Authorization: `Bearer ${jwt}`,
+      Accept: "application/json",
+      "Content-Type": "application/json",
+    },
+  };
   useEffect(() => {
     // fetch jockeys
-    fetch("http://127.0.0.1:5500/api/user/jockeys", {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        setJockeys(data);
-        // console.log(data);
+    backend
+      .get("/api/user/jockeys/", config)
+      // .then((response) => response.json())
+      .then((res) => {
+        setJockeys(res.data);
+        console.log(res);
+        // setIsAdd(false);
       })
-      .catch((error) => console.log(error));
+      .catch((error) => {
+        // setError(error);
+        console.log(error);
+        if (error.response.status == 401) {
+          logout();
+        }
+      });
   }, [isAddJockey]);
   const handleAddJockey = (e) => {
     e.preventDefault();
@@ -28,41 +42,52 @@ function HomePage() {
     setIsAdd(true);
   };
   const addJockey = (body) => {
-    fetch("http://127.0.0.1:5500/api/user/jockey", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${token}`,
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(body),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        // setJockeys(data);
-        console.log(data);
+    backend
+      .post("/api/user/jockeys/", JSON.stringify(body), config)
+      // .then((response) => response.json())
+      .then((res) => {
+        setJockeys(res.data);
+        console.log(res);
         setIsAdd(false);
       })
       .catch((error) => {
         setError(error);
         console.log(error);
+        if (error.response.status == 401) {
+          logout();
+        }
       });
   };
-  const handleJockeySubmit = (e, info, minPrice, maxPrice) => {
+  const handleJockeySubmit = (
+    e,
+    info,
+    minPrice,
+    maxPrice,
+    target,
+    stopLoss,
+    selected
+  ) => {
     e.preventDefault();
 
     console.log("Form submitted,", info);
-    var jockeyName = info["value"]["jockeyName"];
+    var jockeyName = info["value"]["name"];
     var pf_id = info["value"]["punting_form_id"];
 
     var body = {
-      puntingFormId: pf_id,
-      jockeyName: jockeyName,
-      minPrice: minPrice,
-      maxPrice: maxPrice,
+      name: jockeyName,
+      punting_form_id: pf_id,
+      user: null,
+      max_odds: maxPrice,
+      min_odds: minPrice,
+      stop_loss: stopLoss,
+      stop_loss_options: selected,
+      target: target,
     };
     console.log(body);
     addJockey(body);
+  };
+  const handleCloseButton = () => {
+    setIsAdd(false);
   };
   if (jockeys.length === 0) {
     elem = (
@@ -78,7 +103,7 @@ function HomePage() {
         handleAddJockey={handleAddJockey}
         isAddJockey={isAddJockey}
         handleJockeySubmit={handleJockeySubmit}
-        // handleCloseButton={setIsAdd(false)}
+        handleCloseButton={handleCloseButton}
       ></JockeyTable>
     );
   }

@@ -3,16 +3,19 @@ import { useFormik } from "formik";
 import { useState } from "react";
 import * as yup from "yup";
 import { useNavigate } from "react-router-dom";
-
+import backend from "../configs/backend";
+import { AuthContext } from "../commons/AuthContext";
+import { useContext } from "react";
 function Login() {
   const navigate = useNavigate();
   const [loginError, setLoginError] = useState(false);
 
   const formSchema = yup.object().shape({
-    email: yup.string().email("Invalid email").required("Must enter email"),
+    // email: yup.string().email("Invalid email").required("Must enter email"),
     password: yup.string().required("Must enter a password"),
     // .min(6, "Password must be at least 6 characters long"),
   });
+  const { login } = useContext(AuthContext);
 
   const formik = useFormik({
     initialValues: {
@@ -21,45 +24,25 @@ function Login() {
     },
     validationSchema: formSchema,
     onSubmit: async (values) => {
+      JSON.stringify(values);
+      var body = { username: values.email, password: values.password };
       try {
-        const response = await fetch("http://127.0.0.1:5500/api/auth/login", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(values),
-        });
-
-        if (response.status === 200) {
-          const userData = await response.json();
-          if (userData && userData.data && userData.data.token) {
-            localStorage.setItem("token", userData.data.token);
-            localStorage.setItem("id", userData.data.user_id);
+        backend
+          .post("/api/auth/token/", body)
+          .then((res) => {
+            console.log(res);
+            console.log(res.data);
+            localStorage.setItem("access_token", res.data.access);
+            localStorage.setItem("refresh_token", res.data.refresh);
+            login(res.data.access);
             navigate("/");
-            // const authResponse = await fetch(
-            //   "http://127.0.0.1:5500/ping/auth",
-            //   {
-            //     method: "GET",
-            //     headers: {
-            //       Authorization: `Bearer ${userData.data.token}`,
-            //     },
-            //   }
-            // );
-
-            // if (authResponse.ok) {
-            //   navigate("/");
-            // } else {
-            //   setLoginError(true);
-            //   throw new Error("Token authentication failed");
-            // }
-          } else {
+          })
+          .catch(() => {
+            // console.log(res);
+            // console.log(res.data);
+            // console.error("Error:", err.data);
             setLoginError(true);
-            throw new Error("Token is missing in the response data");
-          }
-        } else {
-          setLoginError(true);
-          throw new Error("Login failed");
-        }
+          });
       } catch (error) {
         console.error("Error:", error);
         setLoginError(true);
@@ -90,7 +73,7 @@ function Login() {
               Your email
             </label>
             <input
-              type="email"
+              type="text"
               id="email"
               className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
               placeholder="name@gmail.com"

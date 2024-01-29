@@ -1,27 +1,37 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { useParams } from "react-router-dom";
 import TodayRacesTable from "../components/TodayRacesTable";
+import { AuthContext } from "../commons/AuthContext";
+import backend from "../configs/backend";
 export default function JockeyPage() {
   let { id } = useParams();
-  const token = localStorage.getItem("token");
+
   const [jockey, setJockey] = useState({});
+  const { jwt, logout } = useContext(AuthContext);
+
+  var url = "api/user/jockeys/" + id;
   useEffect(() => {
-    // fetch jockeys
-    fetch("http://127.0.0.1:5500/api/user/jockey?id=" + id, {
-      method: "GET",
+    const config = {
       headers: {
-        Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${jwt}`,
         Accept: "application/json",
         "Content-Type": "application/json",
       },
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        setJockey(data);
+    };
+    backend
+      .get(url, config)
+
+      .then((res) => {
+        setJockey(res.data);
         // console.log(data);
       })
-      .catch((error) => console.log(error));
-  }, [id, token]);
+      .catch((error) => {
+        console.log(error);
+        if (error.response.status == 401) {
+          logout();
+        }
+      });
+  }, [id, jwt, url]);
 
   let table;
   if (jockey) {
