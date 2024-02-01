@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import TodayRacesTable from "../components/TodayRacesTable";
 import { AuthContext } from "../commons/AuthContext";
 import backend from "../configs/backend";
+import JockeyProfile from "../components/JockeyProfile";
 export default function JockeyPage() {
   let { id } = useParams();
 
@@ -40,12 +41,10 @@ export default function JockeyPage() {
   }
   return (
     <>
-      <div className="row">
-        <div className="col">
-          <h2>Jockey</h2>
-          <pre>{JSON.stringify(jockey)}</pre>
-          <h3>Todays Races</h3>
-          <pre>{table}</pre>
+      <div className="flex flex-row">
+        <div className="basis-1/2">{table}</div>
+        <div className="basis-1/4">
+          <JockeyProfile jockey={jockey}></JockeyProfile>
         </div>
       </div>
     </>
