@@ -42,21 +42,8 @@ export default function JockeyTable({
     },
   ];
   let view;
-  const handleCloseBtn = () => {
-    navigate("/");
-  };
+
   if (isAddJockey) {
-    var close_btn = (
-      <div className="pl-4 ">
-        <button
-          onClick={handleCloseBtn}
-          hidden={!isAddJockey}
-          className="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow"
-        >
-          Close
-        </button>
-      </div>
-    );
     view = (
       <AddJockey
         handleJockeySubmit={handleJockeySubmit}
@@ -76,9 +63,7 @@ export default function JockeyTable({
   return (
     <>
       <div className="row">
-        <div className="col-md-2"></div>
-        <div className="col-md-8">{view}</div>
-        <div className="col-md-2"></div>
+        <div className="">{view}</div>
       </div>
     </>
   );
