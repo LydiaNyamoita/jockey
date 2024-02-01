@@ -3,12 +3,14 @@ import AddJockey from "../components/AddJockey";
 import JockeyTable from "../components/JockeyTable";
 import backend from "../configs/backend";
 import { AuthContext } from "../commons/AuthContext";
+import { useNavigate } from "react-router-dom";
 function HomePage() {
   let elem;
   const [jockeys, setJockeys] = useState([]);
   const [isAddJockey, setIsAdd] = useState(false);
   const [error, setError] = useState("");
   // const [selected, setSelected] = useState("3");
+  const navigate = useNavigate();
   const { jwt, logout } = useContext(AuthContext);
 
   var config = {
@@ -26,7 +28,7 @@ function HomePage() {
       .then((res) => {
         setJockeys(res.data);
         console.log(res);
-        // setIsAdd(false);
+        setIsAdd(false);
       })
       .catch((error) => {
         // setError(error);
@@ -40,6 +42,7 @@ function HomePage() {
     e.preventDefault();
     console.log("clicked");
     setIsAdd(true);
+    navigate("/");
   };
   const addJockey = (body) => {
     backend
@@ -49,6 +52,7 @@ function HomePage() {
         setJockeys(res.data);
         console.log(res);
         setIsAdd(false);
+        window.location.reload(false);
       })
       .catch((error) => {
         setError(error);
