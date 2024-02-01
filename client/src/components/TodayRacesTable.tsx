@@ -2,37 +2,39 @@ import DataTable from "react-data-table-component";
 import { useState } from "react";
 import { useEffect } from "react";
 import React from "react";
-export default function TodayRacesTable( id: number ) {
+import backend from "../configs/backend";
+import moment from "moment";
+export default function TodayRacesTable(id: number) {
   const [races, setRaces] = useState([]);
+
   useEffect(() => {
-    fetch("http://127.0.0.1:5500/api/race?jockeyId=" + id['id'], {
-      method: "GET",
-      headers: {
-        // Authorization: `Bearer ${token}`,
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        setRaces(data);
-        // console.log(data);
+    var url = "api/race?jockeyId=" + id["id"];
+    backend
+      .get(url)
+      // .then((response) => response.json())
+      .then((res) => {
+        setRaces(res.data);
+        console.log(res);
       })
       .catch((error) => console.log(error));
   }, [id]);
-  console.log(id)
+  console.log(id);
   const columns = [
     {
+      name: "Date",
+      selector: (row) => moment(row.date).format("DD/MM/YYYY"),
+    },
+    {
       name: "Silk",
-      selector: (row) => (<img src={row.silksSmall}></img>),
+      selector: (row) => <img src={row.silks_small}></img>,
     },
     {
       name: "Horse Number",
-      selector: (row) => row.horseNumber,
+      selector: (row) => row.horse_number,
     },
     {
       name: "Horse Name",
-      selector: (row) => row.horseName,
+      selector: (row) => row.horse_name,
     },
     {
       name: "Track",
@@ -44,7 +46,7 @@ export default function TodayRacesTable( id: number ) {
     },
     {
       name: "Jump Time",
-      selector: (row) => row.startTime,
+      selector: (row) => row.start_time,
     },
     // {
     //   name: "Actions",
@@ -63,9 +65,7 @@ export default function TodayRacesTable( id: number ) {
   return (
     <>
       <div className="row">
-        <div className="col-md-2"></div>
-        <div className="col-md-8">{view}</div>
-        <div className="col-md-2"></div>
+        <div className="">{view}</div>
       </div>
     </>
   );
