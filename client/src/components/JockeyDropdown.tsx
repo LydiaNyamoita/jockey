@@ -12,7 +12,7 @@ export default function JockeyDropdown(
     const element: Jockey = jockeys[i];
     var dict: {} = {};
     dict["value"] = element;
-    dict["label"] = element.name;
+    dict["label"] = element;
     options.push(dict);
   }
 

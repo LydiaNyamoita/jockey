@@ -1,11 +1,11 @@
 import { createContext, useState, useEffect } from "react";
-
-const AuthContext = createContext();
+import React from "react";
+const AuthContext = createContext({ jwt: "" });
 
 function AuthProvider({ children }) {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [token, setToken] = useState(null);
-  const [jwt, setJwt] = useState(null);
+  const [jwt, setJwt] = useState<String | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   useEffect(() => {
     const storedJwt = localStorage.getItem("jwt");

@@ -30,7 +30,7 @@ const AddJockey = ({ handleJockeySubmit, handleClose }) => {
   useEffect(() => {
     // fetch jockeys
     backend
-      .get("/api/races/jockeys")
+      .get("/api/betfair/jockeys")
       // .then((response) => response.json())
       .then((res) => {
         setJockeys(res.data);
