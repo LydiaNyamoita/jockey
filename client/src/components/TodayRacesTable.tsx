@@ -19,14 +19,35 @@ export default function TodayRacesTable(id: number) {
       .catch((error) => console.log(error));
   }, [id]);
   console.log(id);
+  const conditionalRowStyles = [
+    {
+      when: (row) => row.calories < 300,
+      style: {
+        backgroundColor: "green",
+        color: "white",
+        "&:hover": {
+          cursor: "pointer",
+        },
+      },
+    },
+    // You can also pass a callback to style for additional customization
+    {
+      when: (row) => row.calories < 400,
+      style: (row) => ({ backgroundColor: row.isSpecial ? "pink" : "inerit" }),
+    },
+  ];
   const columns = [
     {
       name: "Date",
       selector: (row) => moment(row.date).format("DD/MM/YYYY"),
+      sortable: true,
     },
     {
       name: "Silk",
       selector: (row) => <img src={row.silks_small}></img>,
+      // style: (row) => ({
+      //   backgroundColor: row.isSpecial ? 'pink' : 'green'
+      // }),
     },
     {
       name: "Horse Number",
@@ -61,7 +82,7 @@ export default function TodayRacesTable(id: number) {
     //   ),
     // },
   ];
-  var view = <DataTable columns={columns} data={races} />;
+  var view = <DataTable columns={columns} data={races} pagination />;
   return (
     <>
       <div className="row">

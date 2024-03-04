@@ -4,6 +4,7 @@ import TodayRacesTable from "../components/TodayRacesTable";
 import { AuthContext } from "../commons/AuthContext";
 import backend from "../configs/backend";
 import JockeyProfile from "../components/JockeyProfile";
+import MarketTable from "../components/MrketTable";
 export default function JockeyPage() {
   let { id } = useParams();
 
@@ -42,11 +43,19 @@ export default function JockeyPage() {
   return (
     <>
       <div className="flex flex-row">
-        <div className="basis-1/2">{table}</div>
+        <div style={{ height: 600 }} className="basis-1/2">
+          {/* {table}
+           */}
+          <MarketTable id={jockey.id}></MarketTable>
+        </div>
         <div className="basis-1/4">
           <JockeyProfile jockey={jockey}></JockeyProfile>
         </div>
       </div>
+      {/* <div>Open markets</div>
+      <div>
+        <MarketTable id={jockey.id}></MarketTable>
+      </div> */}
     </>
   );
 }

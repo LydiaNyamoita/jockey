@@ -37,7 +37,7 @@ function HomePage() {
           logout();
         }
       });
-  }, [isAddJockey]);
+  }, []);
   const handleAddJockey = (e) => {
     e.preventDefault();
     console.log("clicked");
@@ -74,7 +74,7 @@ function HomePage() {
     e.preventDefault();
 
     console.log("Form submitted,", info);
-    var jockeyName = info["value"]["name"];
+    var jockeyName = info["value"];
     var pf_id = info["value"]["punting_form_id"];
 
     var body = {

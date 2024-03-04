@@ -8,6 +8,7 @@ import "bootstrap/dist/css/bootstrap.css";
 
 import RouteGuard from "./commons/RouteGuard";
 import Profile from "./pages/Profile";
+import BetPage from "./pages/Bet";
 function App() {
   return (
     <div className=" max-w-[1600px]  mx-auto rounded-sm ">
@@ -28,6 +29,14 @@ function App() {
             element={
               <RouteGuard>
                 <JockeyPage />
+              </RouteGuard>
+            }
+          />
+          <Route
+            path="/jockey/:id/bet"
+            element={
+              <RouteGuard>
+                <BetPage />
               </RouteGuard>
             }
           />
