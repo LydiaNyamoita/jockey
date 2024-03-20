@@ -43,12 +43,12 @@ export default function JockeyPage() {
   return (
     <>
       <div className="flex flex-row">
-        <div style={{ height: 600 }} className="basis-1/2">
+        <div style={{ height: 600 }} className="basis-4/5">
           {/* {table}
            */}
           <MarketTable id={jockey.id}></MarketTable>
         </div>
-        <div className="basis-1/4">
+        <div className="basis-1/5">
           <JockeyProfile jockey={jockey}></JockeyProfile>
         </div>
       </div>

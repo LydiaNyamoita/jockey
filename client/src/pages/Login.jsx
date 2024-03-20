@@ -25,7 +25,7 @@ function Login() {
     validationSchema: formSchema,
     onSubmit: async (values) => {
       JSON.stringify(values);
-      var body = { username: values.email, password: values.password };
+      var body = { email: values.email, password: values.password };
       try {
         backend
           .post("/api/auth/token/", body)

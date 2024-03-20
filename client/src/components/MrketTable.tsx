@@ -1,10 +1,12 @@
-import moment from "moment";
 import React, { useContext, useEffect, useState } from "react";
 import DataTable from "react-data-table-component";
 import backend from "../configs/backend";
 import { AuthContext } from "../commons/AuthContext";
 import { useNavigate } from "react-router-dom";
-
+// import moment from "moment";
+import Moment from "react-moment";
+import "moment-timezone";
+import moment from "moment-timezone";
 export default function MarketTable(id: number) {
   const { jwt } = useContext(AuthContext);
   const [pending, setPending] = React.useState(true);
@@ -41,12 +43,48 @@ export default function MarketTable(id: number) {
   }, [id]);
   const columns = [
     {
+      name: "Date",
+      selector: (row) =>
+        moment(row.market.market_start_time).format("DD-MM-YYYY"),
+
+      // <Moment date={new Date(row.market.market_start_time)} />
+    },
+    // { name: "Venue", selector: (row) => row["event"]["venue"] },
+    {
+      name: "Time",
+      selector: (row) =>
+        moment(row.market.market_start_time)
+          .tz(row.runner.event.timezone)
+          .format("HH:mm"),
+    },
+    { name: "Venue", selector: (row) => row.runner.event.venue },
+    { name: "Market", selector: (row) => row.market.market_name },
+    // {
+    //   name: " ",
+    //   selector: (row) =>  <img src={"http://content-cache.betfair.com/feeds_images/Horses/SilkColours/"+row.colours_filename} alt="" />,
+    // },
+    {
       name: "Horse ",
-      selector: (row) => row.runner_name,
+      selector: (row) => row.runner.runner_name,
     },
     {
       name: "Odds",
-      selector: (row) => row.odds,
+      selector: (row) => row.runner.odds,
+      // moment(row.marketStartTime).format("MM-DD-YYYY HH:MM:SS"),
+    },
+    {
+      name: "Last Price Matched",
+      selector: (row) => row.runner.last_price_traded,
+      // moment(row.marketStartTime).format("MM-DD-YYYY HH:MM:SS"),
+    },
+    {
+      name: "Target",
+      selector: (row) => row.runner.target,
+      // moment(row.marketStartTime).format("MM-DD-YYYY HH:MM:SS"),
+    },
+    {
+      name: "Invest",
+      selector: (row) => row.runner.invest,
       // moment(row.marketStartTime).format("MM-DD-YYYY HH:MM:SS"),
     },
     {
@@ -64,7 +102,7 @@ export default function MarketTable(id: number) {
   ];
   const conditionalRowStyles = [
     {
-      when: (row) => row.status === "WINNER",
+      when: (row) => row.runner.status === "WINNER",
       style: {
         backgroundColor: "rgba(63, 195, 128, 0.9)",
         color: "white",
@@ -72,14 +110,14 @@ export default function MarketTable(id: number) {
     },
 
     {
-      when: (row) => row.status === "LOSER",
+      when: (row) => row.runner.status === "LOSER",
       style: {
         backgroundColor: "rgba(242, 38, 19, 0.9)",
         color: "white",
       },
     },
     {
-      when: (row) => row.status === "REMOVED",
+      when: (row) => row.runner.status === "REMOVED",
       style: {
         backgroundColor: "rgba(42, 38, 19, 0.9)",
         color: "white",
@@ -89,6 +127,7 @@ export default function MarketTable(id: number) {
   return (
     <>
       <div>div table</div>
+      {console.log(markets)}
       <DataTable
         columns={columns}
         data={markets}
