@@ -1,5 +1,5 @@
 import axios from "axios";
-const backendConfig = { baseUrl: "", baseUrlDev: "http://172.105.186.173:1339" };
+const backendConfig = { baseUrl: "", baseUrlDev: "https://angeprince.com" };
 // export default backendConfig;
 const BASE_URL = backendConfig.baseUrlDev;
 
